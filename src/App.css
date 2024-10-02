@@ -13,7 +13,7 @@ body{
   margin: 0 !important;
 }
 :root{
-  --main-bg: #1E1E20
+  --main-bg: #1E1E20;
 }
 .App{
   background-color: #f2f2f2;

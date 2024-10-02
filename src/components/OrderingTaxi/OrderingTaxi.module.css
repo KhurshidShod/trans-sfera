@@ -27,7 +27,7 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    background-color: #4B5A79;
+    background-color: var(--main-bg);
     padding: 2rem;
     border-radius: 20px;
     color: white;
@@ -40,7 +40,7 @@
         border: none;
         outline: none;
         background-color: #fff;
-        color: #4B5A79;
+        color: var(--main-bg);
         font-size: 18px;
     }
 }
@@ -57,7 +57,7 @@
     border: none;
     outline: none;
     background-color: #fff;
-    color: #4B5A79;
+    color: var(--main-bg);
 }
 .text .name{
     width: 100%;
@@ -68,7 +68,7 @@
     border: none;
     outline: none;
     background-color: #fff;
-    color: #4B5A79;
+    color: var(--main-bg);
 }
 .text .trip_infos{
     display: flex;
@@ -81,7 +81,7 @@
             padding: 5px;
             border-radius: 5px;
             background-color: white;
-            color: #4B5A79;
+            color: var(--main-bg);
             white-space: nowrap;
         }
     }

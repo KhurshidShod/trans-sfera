@@ -164,14 +164,18 @@ function Mapping() {
     await reverseGeocode(newCoords[1], newCoords[0], true); // Set starting point
   };
   const swapPoints = () => {
-    const tempStarting = startingPoint;
-    const tempStartingName = startingPointName;
+    if (destinationPoint) {
+      const tempStarting = startingPoint;
+      const tempStartingName = startingPointName;
 
-    setStartingPoint(destinationPoint);
-    setDestinationPoint(tempStarting);
+      setStartingPoint(destinationPoint);
+      setDestinationPoint(tempStarting);
 
-    setStartingPointName(destinationPointName);
-    setDestinationPointName(tempStartingName);
+      setStartingPointName(destinationPointName);
+      setDestinationPointName(tempStartingName);
+    } else {
+      alert("Выберите конечную точку");
+    }
   };
 
   return (
@@ -268,14 +272,14 @@ function Mapping() {
             />
             <div className={styles.trip_infos}>
               <p>
-                Расстояние: <span>{tripInfos.duration}</span>
+                Расстояние: <span>{tripInfos.distance} km</span>
               </p>
               <p>
-                Время в пути: <span>{tripInfos.distance} km</span>
+                Время в пути: <span>{tripInfos.duration}</span>
               </p>
               {selectedPlan !== 0 && (
                 <p>
-                  Цена: <span>₽{tripInfos.distance * selectedPlan}</span>
+                  Цена: <span><b>₽</b> {tripInfos.distance * selectedPlan}</span>
                 </p>
               )}
             </div>
