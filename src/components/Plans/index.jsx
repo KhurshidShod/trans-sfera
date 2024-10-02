@@ -13,7 +13,7 @@ const Plans = () => {
           </div>
           <div className={styles.plans_wrapper}>
             {plans.map((plan, index) => (
-              <div className={styles.plan}>
+              <div className={styles.plan} key={index}>
                 <h2>{plan.name}</h2>
                 <div className={styles.plan_image}>
                   <img src={plan.image} alt="" />

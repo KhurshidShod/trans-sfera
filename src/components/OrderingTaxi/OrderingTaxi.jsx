@@ -253,12 +253,15 @@ function Mapping() {
               initialLocation={destinationPointName}
             />
             <select onChange={(e) => setSelectedPlan(e.target.value)}>
-              <option value="" selected disabled>
+              <option defaultValue="" selected disabled>
                 Виберайте тарифу
               </option>
               {plans.map((plan) => (
-                <option value={plan.price} key={`${plan.id}-${plan.price}`}>
-                  {plan.name} {tripInfos?.distance && `(${plan.price} ₽/km)`}
+                <option
+                  value={plan.price}
+                  key={`${plan.id}-${plan.price}`}
+                >
+                  {plan.name} {plan.price} ₽/km
                 </option>
               ))}
             </select>
@@ -277,9 +280,12 @@ function Mapping() {
               <p>
                 Время в пути: <span>{tripInfos.duration}</span>
               </p>
-              {selectedPlan !== 0 && (
+              {(selectedPlan !== 0 && tripInfos.distance > 0) && (
                 <p>
-                  Цена: <span><b>₽</b> {tripInfos.distance * selectedPlan}</span>
+                  Цена:{" "}
+                  <span>
+                    <b>₽</b> {tripInfos?.distance * selectedPlan}
+                  </span>
                 </p>
               )}
             </div>
