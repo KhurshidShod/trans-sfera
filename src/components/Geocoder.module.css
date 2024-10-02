@@ -15,3 +15,17 @@
     border-radius: 5px;
     border: none;
 }
+.loading {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    padding: 5px;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+    z-index: 2;
+  }
+  

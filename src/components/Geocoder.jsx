@@ -5,8 +5,10 @@ import styles from "./Geocoder.module.css";
 const Geocoder = ({ setGeocodeCoords, placeHolder, initialLocation }) => {
   const [inputValue, setInputValue] = useState(initialLocation || "");
   const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchGeocodeData = async (searchQuery) => {
+    setLoading(true);
     try {
       const response = await axios.get(
         "https://nominatim.openstreetmap.org/search",
@@ -16,7 +18,7 @@ const Geocoder = ({ setGeocodeCoords, placeHolder, initialLocation }) => {
             format: "json",
             countrycodes: "ru",
             addressdetails: 1,
-            limit: 10,
+            limit: 30,
           },
         }
       );
@@ -33,6 +35,8 @@ const Geocoder = ({ setGeocodeCoords, placeHolder, initialLocation }) => {
     } catch (error) {
       console.error("Error fetching geocode data:", error);
       setSuggestions([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -55,7 +59,6 @@ const Geocoder = ({ setGeocodeCoords, placeHolder, initialLocation }) => {
   };
 
   useEffect(() => {
-    // Set the input value when initialLocation changes
     setInputValue(initialLocation || "");
   }, [initialLocation]);
 
@@ -68,6 +71,8 @@ const Geocoder = ({ setGeocodeCoords, placeHolder, initialLocation }) => {
         placeholder={placeHolder}
         className={styles.geocode_input}
       />
+      {loading && <div className={styles.loading}>Loading...</div>}
+
       {suggestions.length > 0 && (
         <ul
           style={{
