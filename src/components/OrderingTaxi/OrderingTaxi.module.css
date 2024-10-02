@@ -1,0 +1,86 @@
+.map{
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding: 1rem;
+}
+.text{
+    width: 50%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: #4B5A79;
+    padding: 2rem;
+    border-radius: 20px;
+        gap: 1rem;
+        >select{
+            width: 100%;
+        padding: 0.7rem;
+        text-align: center;
+        border-radius: 7px;
+        border: none;
+        outline: none;
+        background-color: #fff;
+        color: #4B5A79;
+        font-size: 18px;
+    }
+}
+.geocoder_wrapper{
+    width: 100%;
+    display: flex !important;
+}
+.text .date{
+    width: 100%;
+    font-size: 18px;
+    padding: 0.7rem;
+    text-align: center;
+    border-radius: 7px;
+    border: none;
+    outline: none;
+    background-color: #fff;
+    color: #4B5A79;
+}
+.text .name{
+    width: 100%;
+    font-size: 18px;
+    padding: 0.7rem;
+    text-align: center;
+    border-radius: 7px;
+    border: none;
+    outline: none;
+    background-color: #fff;
+    color: #4B5A79;
+}
+.text .trip_infos{
+    display: flex;
+    gap: 10px;
+    >p{
+        color: white;
+        >span{
+            padding: 5px;
+            border-radius: 5px;
+            background-color: white;
+            color: #4B5A79;
+        }
+    }
+}
+.map_container{
+    position: relative;
+}
+.map_loading{
+    width: 45%;
+    height: 500px;
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    z-index: 999;
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+}
