@@ -16,6 +16,11 @@
     .text{
         width: 100% !important;
     }
+    .map_loading{
+        top: 54% !important;
+        left: 1rem !important;
+        width: 100% !important;
+    }
 }
 .text{
     width: 50%;
@@ -25,6 +30,7 @@
     background-color: #4B5A79;
     padding: 2rem;
     border-radius: 20px;
+    color: white;
         gap: 1rem;
         >select{
             width: 100%;
