@@ -8,6 +8,15 @@
     flex-wrap: nowrap;
     padding: 1rem;
 }
+@media (max-width: 850px) {
+    .map{
+        flex-direction: column-reverse;
+        gap: 1rem;
+    }
+    .text{
+        width: 100% !important;
+    }
+}
 .text{
     width: 50%;
     display: flex;
@@ -57,14 +66,17 @@
 }
 .text .trip_infos{
     display: flex;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 1rem;
     >p{
         color: white;
+        white-space: nowrap;
         >span{
             padding: 5px;
             border-radius: 5px;
             background-color: white;
             color: #4B5A79;
+            white-space: nowrap;
         }
     }
 }
