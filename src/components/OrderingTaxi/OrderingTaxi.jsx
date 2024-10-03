@@ -13,7 +13,7 @@ import { plans } from "../../assets/data/data";
 
 function Mapping() {
   const mapInstanceRef = useRef();
-  const [startingPoint, setStartingPoint] = useState([67, 40]);
+  const [startingPoint, setStartingPoint] = useState(null);
   const [destinationPoint, setDestinationPoint] = useState(null);
   const [coords, setCoords] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState(0);
@@ -30,7 +30,7 @@ function Mapping() {
   const [isGeolocated, setIsGeolocated] = useState(false);
   const [startingPointName, setStartingPointName] = useState("");
   const [destinationPointName, setDestinationPointName] = useState("");
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false);
 
   const GeolocateControlRef = useRef();
 
@@ -60,7 +60,7 @@ function Mapping() {
   };
 
   useEffect(() => {
-    if (mapLoaded) {
+    if (mapLoaded && startingPoint && destinationPoint) {
       getRoute();
       if (!isGeolocated) {
         GeolocateControlRef.current?.trigger();
@@ -73,7 +73,7 @@ function Mapping() {
       async (position) => {
         const { latitude, longitude } = position.coords;
         setStartingPoint([longitude, latitude]);
-        await reverseGeocode(latitude, longitude, true); // Set starting point
+        await reverseGeocode(latitude, longitude, true);
         setIsGeolocated(true);
       },
       (error) => {
@@ -97,9 +97,9 @@ function Mapping() {
       const data = response.data;
       if (data && data.display_name) {
         if (isStartingPoint) {
-          setStartingPointName(data.display_name); // Update starting point name
+          setStartingPointName(data.display_name);
         } else {
-          setDestinationPointName(data.display_name); // Update destination point name
+          setDestinationPointName(data.display_name);
         }
       }
     } catch (error) {
@@ -108,17 +108,57 @@ function Mapping() {
   };
 
   const getRoute = async () => {
-    if (destinationPoint) {
-      setLoading(true); // Start loading
+    if (startingPoint && destinationPoint) {
+      setLoading(true);
       try {
         const res = await axios.get(
           `https://api.mapbox.com/directions/v5/mapbox/driving/${startingPoint[0]},${startingPoint[1]};${destinationPoint[0]},${destinationPoint[1]}?steps=true&geometries=geojson&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
         );
         if (res.data.routes.length > 0) {
-          setCoords(res.data.routes[0].geometry.coordinates);
+          const routeCoordinates = res.data.routes[0].geometry.coordinates;
+          setCoords(routeCoordinates);
           setTripInfos({
             duration: formatDuration(res.data.routes[0].duration),
             distance: (res.data.routes[0].distance / 1000).toFixed(1),
+          });
+
+          const allCoords = [
+            ...routeCoordinates,
+            startingPoint,
+            destinationPoint,
+          ];
+          const bounds = allCoords.reduce(
+            (acc, coord) => {
+              return [
+                Math.min(acc[0], coord[0]),
+                Math.min(acc[1], coord[1]),
+                Math.max(acc[2], coord[0]),
+                Math.max(acc[3], coord[1]),
+              ];
+            },
+            [Infinity, Infinity, -Infinity, -Infinity]
+          );
+
+          const { longitude, latitude } = {
+            longitude: (bounds[0] + bounds[2]) / 2,
+            latitude: (bounds[1] + bounds[3]) / 2,
+          };
+
+          const map = mapInstanceRef.current.getMap();
+          const padding = 20;
+          map.fitBounds(
+            [
+              [bounds[0], bounds[1]],
+              [bounds[2], bounds[3]],
+            ],
+            { padding }
+          );
+
+          setViewState({
+            ...viewState,
+            longitude,
+            latitude,
+            zoom: map.getZoom(),
           });
         } else {
           throw new Error({ msg: "No route found" });
@@ -126,7 +166,7 @@ function Mapping() {
       } catch (err) {
         console.error(err);
       } finally {
-        setLoading(false); // End loading
+        setLoading(false);
       }
     }
   };
@@ -156,13 +196,14 @@ function Mapping() {
     const newEnd = e.lngLat;
     const endPoint = [newEnd.lng, newEnd.lat];
     setDestinationPoint(endPoint);
-    await reverseGeocode(newEnd.lat, newEnd.lng, false); // Set destination point
+    await reverseGeocode(newEnd.lat, newEnd.lng, false);
   };
 
   const handleStartingPointChange = async (newCoords) => {
     setStartingPoint(newCoords);
-    await reverseGeocode(newCoords[1], newCoords[0], true); // Set starting point
+    await reverseGeocode(newCoords[1], newCoords[0], true);
   };
+
   const swapPoints = () => {
     if (destinationPoint) {
       const tempStarting = startingPoint;
@@ -208,8 +249,8 @@ function Mapping() {
                 handleStartingPointChange([e.lngLat.lng, e.lngLat.lat])
               }
               draggable
-              longitude={startingPoint[0]}
-              latitude={startingPoint[1]}
+              longitude={startingPoint ? startingPoint[0] : 0}
+              latitude={startingPoint ? startingPoint[1] : 0}
             />
             <Marker
               onDragEnd={(e) => handleMapClick(e)}
@@ -226,8 +267,8 @@ function Mapping() {
             <Geocoder
               placeHolder="Откуда"
               setGeocodeCoords={(e) => handleStartingPointChange(e)}
-              setStartingPoint={setStartingPoint} // Pass function
-              setStartingPointName={setStartingPointName} // Pass function
+              setStartingPoint={setStartingPoint}
+              setStartingPointName={setStartingPointName}
               initialLocation={startingPointName}
               isStartingPoint={true}
             />
@@ -261,10 +302,7 @@ function Mapping() {
                 Виберайте тарифу
               </option>
               {plans.map((plan) => (
-                <option
-                  value={plan.price}
-                  key={`${plan.id}-${plan.price}`}
-                >
+                <option value={plan.price} key={`${plan.id}-${plan.price}`}>
                   {plan.name} {plan.price} ₽/km
                 </option>
               ))}
@@ -284,7 +322,7 @@ function Mapping() {
               <p>
                 Время в пути: <span>{tripInfos.duration}</span>
               </p>
-              {(selectedPlan !== 0 && tripInfos.distance > 0) && (
+              {selectedPlan !== 0 && tripInfos.distance > 0 && (
                 <p>
                   Цена:{" "}
                   <span>
