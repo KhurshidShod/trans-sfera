@@ -4,23 +4,23 @@ export const plans = [
     name: "Econom",
     price: 100,
     image:
-      "https://tteglobal.com/media/image/30/ec/13/1-6-pure-white_tcm-3060-2080305.png",
-    cars: ["Toyota Yaris", "Honda Jazz"],
+      "https://pngimg.com/d/lada_PNG104.png",
+    cars: ["Lada Vesta"],
   },
   {
     id: 0,
-    name: "Standard",
+    name: "Comfort",
     price: 200,
     image:
-      "https://www.pngplay.com/wp-content/uploads/2/Skoda-Transparent-File.png",
-    cars: ["Skoda Rapid", "VW Polo"],
+      "https://www.pngplay.com/wp-content/uploads/13/Kia-Optima-Background-PNG-Image.png",
+    cars: ["Kia Optima"],
   },
   {
     id: 0,
-    name: "Business",
+    name: "Minivan",
     price: 300,
-    cars: ["Skoda Octavia", "VW Jetta"],
+    cars: ["Hyundai Starex"],
     image:
-      "https://www.pngplay.com/wp-content/uploads/13/Skoda-Octavia-2019-Transparent-Background.png",
+      "https://dodomat.com.my/cdn/shop/files/car-mats-hyundai-grand-starex-royale-2014-present-tq.png?v=1725000339",
   },
 ];

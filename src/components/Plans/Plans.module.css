@@ -60,9 +60,8 @@ section{
     justify-content: center;
     align-items: center;
     >img{
-        width: 90%;
-        height: 100%;
         max-width: 400px;
+        height: 100%;
     }
 }
 .plan_info{
