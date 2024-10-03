@@ -10,6 +10,7 @@ const Geocoder = ({
   setDestinationPointName,
   placeHolder,
   initialLocation,
+  isStartingPoint,
 }) => {
   const [inputValue, setInputValue] = useState(initialLocation || "");
   const [suggestions, setSuggestions] = useState([]);
@@ -44,7 +45,7 @@ const Geocoder = ({
       console.error("Error fetching geocode data:", error);
       setSuggestions([]);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
@@ -59,25 +60,31 @@ const Geocoder = ({
     }
   };
 
-  const handleSuggestionClick = (suggestion, isStartingPoint) => {
+  const handleSuggestionClick = (suggestion) => {
     const { lat, lon, display_name } = suggestion;
     if (isStartingPoint) {
       setStartingPoint([parseFloat(lon), parseFloat(lat)]);
       setStartingPointName(display_name);
     } else {
       setDestinationPoint([parseFloat(lon), parseFloat(lat)]);
-      setDestinationPointName(display_name); // Update destination point name directly
+      setDestinationPointName(display_name);
     }
-    setSuggestions([]); // Clear suggestions
+    setSuggestions([]);
+  };
+
+  const handleClearInput = () => {
+    setInputValue("");
+    setSuggestions([]);
   };
 
   useEffect(() => {
-    // Set the input value when initialLocation changes
     setInputValue(initialLocation || "");
   }, [initialLocation]);
+
   const handleBlur = () => {
     setSuggestions([]);
   };
+
   return (
     <div className={styles.input_wrapper} style={{ position: "relative" }}>
       <input
@@ -87,6 +94,16 @@ const Geocoder = ({
         placeholder={placeHolder}
         className={styles.geocode_input}
       />
+      {inputValue && (
+        <svg
+          onClick={handleClearInput}
+          className={styles.clear_icon}
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 384 512"
+        >
+          <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+        </svg>
+      )}
       {loading && <div className={styles.loading}>Loading...</div>}
       {suggestions.length > 0 ? (
         <ul className={styles.suggestions}>

@@ -229,6 +229,7 @@ function Mapping() {
               setStartingPoint={setStartingPoint} // Pass function
               setStartingPointName={setStartingPointName} // Pass function
               initialLocation={startingPointName}
+              isStartingPoint={true}
             />
             <svg
               onClick={swapPoints}
@@ -248,9 +249,12 @@ function Mapping() {
             <Geocoder
               placeHolder="Куда"
               setGeocodeCoords={(e) => setDestinationPoint(e)}
-              setDestinationPoint={setDestinationPoint} // Pass function
-              setDestinationPointName={setDestinationPointName} // Pass function
+              setDestinationPoint={setDestinationPoint}
+              setDestinationPointName={setDestinationPointName}
+              setStartingPoint={setStartingPoint}
+              setStartingPointName={setStartingPointName}
               initialLocation={destinationPointName}
+              isStartingPoint={false}
             />
             <select onChange={(e) => setSelectedPlan(e.target.value)}>
               <option defaultValue="" selected disabled>
