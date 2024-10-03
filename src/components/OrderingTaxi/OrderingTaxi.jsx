@@ -256,19 +256,7 @@ function Mapping() {
   const orderingFunction = (e) => {
     e.preventDefault();
     setOrderSending(true);
-    console.log({
-      startingPoint: startingPoint,
-      destinationPoint: destinationPoint,
-      startingPointName: startingPointName,
-      destinationPointName: destinationPointName,
-      selectedPlan: selectedPlan,
-      price: tripInfos.distance * selectedPlan,
-      distance: tripInfos.distance,
-      duration: tripInfos.duration,
-      name: name,
-      phoneNumber: phone,
-      dateOfOrder: dateOfOrder,
-    });
+    sendEmail();
     toast.success(
       "Ваш заказ успешно получен. Мы свяжемся с вами в ближайшее время"
     );
