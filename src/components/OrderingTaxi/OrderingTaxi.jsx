@@ -10,6 +10,8 @@ import axios from "axios";
 import Geocoder from "../Geocoder";
 import styles from "./OrderingTaxi.module.css";
 import { plans } from "../../assets/data/data";
+import emailjs from "emailjs-com";
+import { toast } from "react-toastify";
 
 function Mapping() {
   const mapInstanceRef = useRef();
@@ -17,6 +19,8 @@ function Mapping() {
   const [destinationPoint, setDestinationPoint] = useState(null);
   const [coords, setCoords] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState(0);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [viewState, setViewState] = useState({
     longitude: 67,
     latitude: 40,
@@ -28,9 +32,11 @@ function Mapping() {
   });
   const [mapLoaded, setMapLoaded] = useState(false);
   const [isGeolocated, setIsGeolocated] = useState(false);
+  const [dateOfOrder, setDateOfOrder] = useState(new Date());
   const [startingPointName, setStartingPointName] = useState("");
   const [destinationPointName, setDestinationPointName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [orderSending, setOrderSending] = useState(false);
 
   const GeolocateControlRef = useRef();
 
@@ -219,6 +225,66 @@ function Mapping() {
     }
   };
 
+  const sendEmail = () => {
+    const templateParams = {
+      startingPoint: startingPoint,
+      destinationPoint: destinationPoint,
+      startingPointName: startingPointName,
+      destinationPointName: destinationPointName,
+      selectedPlan: selectedPlan,
+      price: tripInfos.distance * selectedPlan,
+      distance: tripInfos.distance,
+      duration: tripInfos.duration,
+      name: name,
+      phoneNumber: phone,
+      dateOfOrder: dateOfOrder,
+    };
+    emailjs
+      .send(
+        "service_b65kkkr",
+        "template_iru1r5i",
+        templateParams,
+        "gu3GKnLhPO_UuV3ju"
+      )
+      .then((response) => {
+        console.log("Email sent successfully!", response.status, response.text);
+      })
+      .catch((error) => {
+        console.error("Error sending email:", error);
+      });
+  };
+  const orderingFunction = (e) => {
+    e.preventDefault();
+    setOrderSending(true);
+    console.log({
+      startingPoint: startingPoint,
+      destinationPoint: destinationPoint,
+      startingPointName: startingPointName,
+      destinationPointName: destinationPointName,
+      selectedPlan: selectedPlan,
+      price: tripInfos.distance * selectedPlan,
+      distance: tripInfos.distance,
+      duration: tripInfos.duration,
+      name: name,
+      phoneNumber: phone,
+      dateOfOrder: dateOfOrder,
+    });
+    toast.success(
+      "Ваш заказ успешно получен. Мы свяжемся с вами в ближайшее время"
+    );
+    setStartingPoint(null);
+    setDestinationPoint(null);
+    setSelectedPlan(0);
+    setDateOfOrder(new Date());
+    setName("");
+    setPhone("");
+    setStartingPointName("");
+    setDestinationPointName("");
+    setTripInfos({ duration: 0, distance: 0 });
+    setCoords([]);
+    setOrderSending(false);
+  };
+
   return (
     <section>
       <div className="container">
@@ -263,7 +329,7 @@ function Mapping() {
           {loading && (
             <div className={styles.map_loading}>Загрузка маршрута...</div>
           )}
-          <div className={styles.text}>
+          <form onSubmit={(e) => orderingFunction(e)} className={styles.text}>
             <Geocoder
               placeHolder="Откуда"
               setGeocodeCoords={(e) => handleStartingPointChange(e)}
@@ -297,7 +363,7 @@ function Mapping() {
               initialLocation={destinationPointName}
               isStartingPoint={false}
             />
-            <select onChange={(e) => setSelectedPlan(e.target.value)}>
+            <select required onChange={(e) => setSelectedPlan(e.target.value)}>
               <option defaultValue="" selected disabled>
                 Виберайте тарифу
               </option>
@@ -308,12 +374,30 @@ function Mapping() {
               ))}
             </select>
             <h3>Дата / время</h3>
-            <input className={styles.date} type="datetime-local" />
+            <input
+              required
+              value={dateOfOrder.toISOString().slice(0, 16)}
+              onChange={(e) => setDateOfOrder(e.target.value)}
+              className={styles.date}
+              type="datetime-local"
+            />
             <h3>Имя</h3>
             <input
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className={styles.name}
               type="text"
               placeholder="Введите ваше имя"
+            />
+            <h3>Номер телефона</h3>
+            <input
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className={styles.name}
+              type="text"
+              placeholder="Введите свой номер телефона"
             />
             <div className={styles.trip_infos}>
               <p>
@@ -331,7 +415,11 @@ function Mapping() {
                 </p>
               )}
             </div>
-          </div>
+            <button type="submit" disabled={orderSending}>
+              <p>{orderSending ? "Заказ отправляется..." : "Заказать"} {orderSending && <div className={styles.sendBtn_loader}></div>}</p>
+              
+            </button>
+          </form>
         </div>
       </div>
     </section>

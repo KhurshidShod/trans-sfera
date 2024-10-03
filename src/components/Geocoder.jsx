@@ -88,6 +88,7 @@ const Geocoder = ({
   return (
     <div className={styles.input_wrapper} style={{ position: "relative" }}>
       <input
+      required
         type="text"
         value={inputValue}
         onChange={handleInputChange}
