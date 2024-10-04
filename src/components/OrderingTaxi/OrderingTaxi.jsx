@@ -378,7 +378,11 @@ function Mapping() {
               type="text"
               placeholder="Введите ваше имя"
             />
-            <h3>Номер телефона</h3>
+            <h3 className={styles.phone_title}>
+              Номер телефона{" "}
+              <span>наш менеджер свяжется с вами в течение 10 минут</span>
+            </h3>
+
             <input
               required
               value={phone}
@@ -404,8 +408,10 @@ function Mapping() {
               )}
             </div>
             <button type="submit" disabled={orderSending}>
-              <p>{orderSending ? "Заказ отправляется..." : "Заказать"} {orderSending && <div className={styles.sendBtn_loader}></div>}</p>
-              
+              <p>
+                {orderSending ? "Заказ отправляется..." : "Заказать"}{" "}
+                {orderSending && <div className={styles.sendBtn_loader}></div>}
+              </p>
             </button>
           </form>
         </div>

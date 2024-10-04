@@ -29,9 +29,8 @@
     flex-direction: column;
     background-color: var(--main-bg);
     padding: 2rem;
-    border-radius: 20px;
     color: white;
-        gap: 1rem;
+    gap: 1rem;
         >select{
             width: 100%;
         padding: 0.7rem;
@@ -80,6 +79,19 @@
         cursor: not-allowed;
         background-color: rgb(147, 147, 147);
     }
+    /* >span{
+        font-size: 12px;
+    } */
+     .phone_title{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        >span{
+            font-size: 12px;
+            font-weight: 400;
+        }
+     }
 }
 .geocoder_wrapper{
     width: 100%;
